@@ -33,25 +33,48 @@ class person:
     def cheeck(self):
         print(f"you have {self.money} in your account")
 
-
-people = {}
 ccc = None
+people = {}
+
+def createe():
+    global ccc
+    x = input("enter name")
+    while x  in people.keys():
+        print("name already exsists")
+        x = input("enter name")   
+    a = input("enter password")
+    y = int(input("enter age"))
+    people[x] = person(x,y,a)
+    ccc = people[x]
+
+def login():
+    global ccc
+    aa = input("enter your name")
+    if aa in people:
+        aaa = input("enter your password")
+        if aaa == people[aa].password:
+            print(f"you have logged in into {aa} account")
+            ccc = people[aa]
+
+x = input("enter name")
+a = input("enter password")
+y = int(input("enter age"))
+people[x] = person(x,y,a)
+ccc = people[x]
+
 while True:
-    c = input("what would u like to do?(create,deposit,withdraw,check,log in)")
+    if ccc == None:
+        choice = input("create or log in?")
+        if choice == "create":
+            createe()
+        if choice == "log in":
+            login()
+
+    c = input("what would u like to do?(create,deposit,withdraw,check,log in,log out)")
     if c == "log in":
-        aa = input("enter your name")
-        for i in people:
-            if aa == i:
-                aaa = input("enter your password")
-                if aaa == people[i].password:
-                    print(f"you have logged in into {aa} account")
-                    ccc = people[i]
+        login()
     elif c == "create":
-        x = input("enter name")
-        a = input("enter password")
-        y = int(input("enter age"))
-        people[x] = person(x,y,a)
-        ccc = people[x]
+        createe()
     elif c == "deposit":
         d = int(input("enter deposit amount"))
         ccc.deposit(d)
@@ -60,6 +83,12 @@ while True:
         ccc.withdraw(d)
     elif c == "check":
         ccc.cheeck()
+    elif c == "log out":
+        if ccc == None:
+            print("no account to log out from")
+        else:
+            print(f"logged out of {ccc.name} account")
+            ccc = None
 
 
 
