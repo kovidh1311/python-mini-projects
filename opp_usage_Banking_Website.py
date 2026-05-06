@@ -1,12 +1,12 @@
 
-
+import json
 class person:   
 
-    def __init__(self,name,age,password):
+    def __init__(self,name,age,password,money):
         if age<18:
             raise ValueError("you are not allowed to make a account")
         else:
-            self.money = 0
+            self.money = money
             self.name = name
             self.age = age
             self.password = password
@@ -33,8 +33,14 @@ class person:
     def cheeck(self):
         print(f"you have {self.money} in your account")
 
-ccc = None
 people = {}
+ccc = None
+
+with open("accounts.json", "r") as file:
+    data = json.load(file)
+    for i in data:
+        people[i]=person(i,data[i]["age"],data[i]["password"],data[i]["money"])
+
 
 def createe():
     global ccc
@@ -44,37 +50,39 @@ def createe():
         x = input("enter name")   
     a = input("enter password")
     y = int(input("enter age"))
-    people[x] = person(x,y,a)
+    people[x] = person(x,y,a,0)
     ccc = people[x]
+
 
 def login():
     global ccc
     aa = input("enter your name")
     if aa in people:
-        aaa = input("enter your password")
-        if aaa == people[aa].password:
-            print(f"you have logged in into {aa} account")
-            ccc = people[aa]
+        u = 0
+        while u != 3:
+            aaa = input("enter your password")
+            if aaa == people[aa].password:
+                print(f"you have logged in into {aa} account")
+                ccc = people[aa]
+                break
+            else:
+                print("password is wrong")
+                u = u+1
 
-x = input("enter name")
-a = input("enter password")
-y = int(input("enter age"))
-people[x] = person(x,y,a)
-ccc = people[x]
 
 while True:
-    if ccc == None:
-        choice = input("create or log in?")
-        if choice == "create":
-            createe()
-        if choice == "log in":
-            login()
 
-    c = input("what would u like to do?(create,deposit,withdraw,check,log in,log out)")
+    c = input("what would u like to do?(create,deposit,withdraw,check,log in,log out,imdone)")
     if c == "log in":
-        login()
+        if ccc:
+            print("log out first")
+        else:
+            login()
     elif c == "create":
-        createe()
+        if ccc:
+            print("log out first")
+        else:
+            createe()
     elif c == "deposit":
         d = int(input("enter deposit amount"))
         ccc.deposit(d)
@@ -89,6 +97,19 @@ while True:
         else:
             print(f"logged out of {ccc.name} account")
             ccc = None
+    elif c == "imdone":
+        break
 
+data = {}
+
+for name, person in people.items():
+    data[name] = {
+        "age": person.age,
+        "password": person.password,
+        "money": person.money
+    }
+
+with open("accounts.json", "w") as f:
+    json.dump(data, f)
 
 
